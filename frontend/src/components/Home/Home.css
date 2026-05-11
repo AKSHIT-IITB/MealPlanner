@@ -1,4 +1,3 @@
-/* Reset and base styles */
 .home-wrapper {
   font-family: 'Segoe UI', sans-serif;
   color: #333;
@@ -6,23 +5,30 @@
   background: #f9f9f9;
 }
 
-/* CTA Section */
+/* CTA */
 .cta-section {
   text-align: center;
   margin-bottom: 60px;
   background: #fff;
-  padding: 40px 20px;
+  padding: 50px 20px;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.cta-icon {
+  font-size: 3rem;
+  color: #ff7043;
+  margin-bottom: 16px;
 }
 
 .cta-section h1 {
   font-size: 2rem;
   color: #2c3e50;
+  margin: 0 0 12px;
 }
 
 .cta-section p {
-  margin: 12px 0 20px;
+  margin: 0 0 24px;
   color: #555;
 }
 
@@ -30,7 +36,7 @@
   background-color: #ff7043;
   color: #fff;
   border: none;
-  padding: 12px 28px;
+  padding: 12px 32px;
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
@@ -41,61 +47,50 @@
   background-color: #f4511e;
 }
 
-/* Testimonial Section */
-.testimonial-section {
+/* Features */
+.features-section {
   text-align: center;
 }
 
-.testimonial-section h2 {
+.features-section h2 {
   font-size: 1.8rem;
   margin-bottom: 30px;
   color: #2c3e50;
 }
 
-.testimonial-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
 }
 
-.testimonial-card {
+.feature-card {
   background: #fff;
-  padding: 24px;
+  padding: 28px 24px;
   border-radius: 12px;
-  max-width: 500px;
-  text-align: left;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-  position: relative;
+  transition: transform 0.2s ease;
 }
 
-.quote-icon {
-  font-size: 1.2rem;
+.feature-card:hover {
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  font-size: 2rem;
   color: #ff7043;
   margin-bottom: 12px;
 }
 
-.testimonial-card p {
-  font-style: italic;
-  margin-bottom: 16px;
-  color: #444;
+.feature-card h3 {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin: 0 0 8px;
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
- 
-.user-info img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.user-info div span {
-  display: block;
-  font-size: 0.85rem;
-  color: #777;
+.feature-card p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
 }

@@ -1,9 +1,8 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar/Navbar';
-import Home from './components/Home/Home';
-import DailyPlan from './components/DailyPlan/DailyPlan';
-import Footer from './components/Footer/Footer';
+import Navbar from './components/Navbar/Navbar.jsx';
+import Home from './components/Home/Home.jsx';
+import DailyPlan from './components/DailyPlan/DailyPlan.jsx';
+import Footer from './components/Footer/Footer.jsx';
 import './App.css';
 
 function App() {
@@ -15,7 +14,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/daily-plan" element={<DailyPlan />} />
-            
           </Routes>
         </main>
         <Footer />

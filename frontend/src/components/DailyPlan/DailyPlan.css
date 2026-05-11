@@ -338,6 +338,36 @@
   border-radius: 5px;
 }
 
+/* Loading / Error */
+.loading {
+  text-align: center;
+  padding: 80px 20px;
+  font-size: 1.1em;
+  color: #7f8c8d;
+}
+
+.loading.error {
+  color: #e74c3c;
+}
+
+/* Database item action buttons — inline flex, not absolute */
+.fav-action-btn,
+.del-action-btn {
+  background: none;
+  border: none;
+  font-size: 1.1em;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.fav-action-btn { color: #bdc3c7; }
+.fav-action-btn.favorited { color: #e74c3c; }
+.fav-action-btn:hover { color: #e74c3c; }
+
+.del-action-btn { color: #e74c3c; }
+.del-action-btn:hover { transform: scale(1.2); }
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .meal-sections {

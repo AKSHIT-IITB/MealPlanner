@@ -1,70 +1,213 @@
-# Getting Started with Create React App
+# Meal Planner Buddy
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack meal planning web app that lets you plan your daily meals, manage a personal recipe database, and get smart daily suggestions — with favorites always shown first.
 
-## Available Scripts
+Built with **React + Vite** on the frontend and **Express + MongoDB Atlas** on the backend.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Daily Suggestions** — Get 3 curated meal suggestions per slot (breakfast / lunch / dinner) every day. Reshuffle anytime.
+- **Favorites First** — Mark meals as favorites and they'll always surface at the top of suggestions.
+- **Lock In Your Plan** — Select and save your final meals for the day. Changes persist in MongoDB.
+- **Meal Database** — Add or remove meals from your personal database per meal type.
+- **Search** — Filter your entire meal database by name or description.
+- **Persistent Storage** — All data lives in MongoDB Atlas; nothing is lost on page refresh.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, React Router v7, React Icons |
+| Backend | Node.js, Express.js |
+| Database | MongoDB Atlas (Mongoose ODM) |
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Project Structure
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+MealPlanner/
+├── backend/                  # Express + Mongoose API server
+│   ├── models/
+│   │   ├── Meal.js           # Meal schema (type, name, desc, isFavorite)
+│   │   └── DailyPlan.js      # Daily plan schema (date, suggestions, finalized)
+│   ├── routes/
+│   │   ├── meals.js          # CRUD + favorite toggle for meals
+│   │   └── dailyPlan.js      # Daily plan get / finalize / regenerate
+│   ├── db.js                 # MongoDB connection
+│   ├── index.js              # Server entry point
+│   ├── .env                  # Environment variables (not committed)
+│   ├── .env.example          # Template for .env
+│   └── package.json
+│
+├── frontend/                 # Vite + React client
+│   ├── public/
+│   │   └── favicon.ico
+│   ├── src/
+│   │   ├── api.js            # All fetch calls to the backend
+│   │   ├── main.jsx          # React entry point
+│   │   ├── App.jsx           # Router setup
+│   │   ├── App.css
+│   │   ├── index.css
+│   │   └── components/
+│   │       ├── Navbar/
+│   │       ├── Footer/
+│   │       ├── Home/
+│   │       └── DailyPlan/
+│   ├── index.html
+│   ├── vite.config.js        # Dev proxy: /api → localhost:5000
+│   └── package.json
+│
+├── .gitignore
+└── README.md
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## Getting Started
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Prerequisites
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- [Node.js](https://nodejs.org/) v18 or higher
+- A [MongoDB Atlas](https://www.mongodb.com/atlas) account (free tier works)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 1. Clone the repository
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+git clone https://github.com/<your-username>/MealPlanner.git
+cd MealPlanner
+```
 
-## Learn More
+### 2. Set up the backend
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Edit `backend/.env` and add your MongoDB Atlas connection string:
 
-### Code Splitting
+```env
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/mealplanner?retryWrites=true&w=majority&appName=Cluster0
+PORT=5000
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Start the backend server:
 
-### Analyzing the Bundle Size
+```bash
+npm run dev       # development (nodemon)
+# or
+npm start         # production
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The backend runs on **http://localhost:5000**.
 
-### Making a Progressive Web App
+On first run, the database is automatically seeded with 15 default meals (5 per slot).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### 3. Set up the frontend
 
-### Advanced Configuration
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+The frontend runs on **http://localhost:5173** and automatically proxies `/api/*` requests to the backend.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## API Reference
 
-### `npm run build` fails to minify
+### Meals
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/meals` | Get all meals grouped by type |
+| `POST` | `/api/meals` | Add a new meal |
+| `DELETE` | `/api/meals/:id` | Delete a meal by ID |
+| `PATCH` | `/api/meals/:id/favorite` | Toggle favorite status |
+
+**POST `/api/meals` body:**
+```json
+{
+  "type": "breakfast",
+  "name": "Oatmeal",
+  "desc": "Healthy oats with fruits and nuts"
+}
+```
+
+### Daily Plan
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/daily-plan` | Get today's plan (auto-created if new day) |
+| `POST` | `/api/daily-plan/regenerate` | Reshuffle today's suggestions |
+| `PUT` | `/api/daily-plan/finalize` | Select a meal for a slot |
+| `DELETE` | `/api/daily-plan/finalize/:type` | Clear a finalized meal slot |
+
+**PUT `/api/daily-plan/finalize` body:**
+```json
+{
+  "type": "lunch",
+  "meal": { "_id": "...", "name": "Burger", "desc": "..." }
+}
+```
+
+---
+
+## Environment Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `MONGODB_URI` | MongoDB Atlas connection string | `mongodb+srv://...` |
+| `PORT` | Port the backend listens on | `5000` |
+
+---
+
+## Scripts
+
+### Backend (`backend/`)
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start with nodemon (auto-restart on changes) |
+| `npm start` | Start in production mode |
+
+### Frontend (`frontend/`)
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build locally |
+
+---
+
+## Deployment
+
+### Backend
+Deploy to any Node.js host (Railway, Render, Fly.io). Set the `MONGODB_URI` and `PORT` environment variables on the platform.
+
+### Frontend
+Build with `npm run build` inside `frontend/`, then deploy the `dist/` folder to Vercel, Netlify, or any static host. Set the API base URL to your deployed backend URL.
+
+---
+
+## Author
+
+**Akshit Kumar**
+
+- [LinkedIn](https://www.linkedin.com/in/akshit-kumar-7069392b9)
+- [YouTube](https://www.youtube.com/@MedTechDiaries8)
+- [X / Twitter](https://x.com/Akshit_iitb_27)
+
+---
+
+## License
+
+MIT
