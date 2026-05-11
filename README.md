@@ -208,6 +208,3 @@ Build with `npm run build` inside `frontend/`, then deploy the `dist/` folder to
 
 ---
 
-## License
-
-MIT
