@@ -107,16 +107,34 @@ export async function syncVectorStore() {
   return res.json()
 }
 
-export async function getWeeklyPlan() {
-  const res = await fetch(AI + '/weekly-plan', { headers: authHeader() })
-  if (!res.ok) throw new Error('Failed to load plan')
+export async function getUserWeeklyPlan() {
+  const res = await fetch(API + '/weekly-plan', { headers: authHeader() })
   return res.json()
 }
 
-export async function generateWeeklyPlan() {
+export async function saveWeeklyPlan(plan) {
+  const res = await fetch(API + '/weekly-plan', {
+    method: 'POST',
+    headers: authHeader(),
+    body: JSON.stringify(plan)
+  })
+  return res.json()
+}
+
+export async function swapMeal(dayIndex, type, meal) {
+  const res = await fetch(API + '/weekly-plan/swap', {
+    method: 'PATCH',
+    headers: authHeader(),
+    body: JSON.stringify({ dayIndex, type, meal })
+  })
+  return res.json()
+}
+
+export async function generateWeeklyPlan(meals) {
   const res = await fetch(AI + '/weekly-plan/generate', {
     method: 'POST',
-    headers: authHeader()
+    headers: authHeader(),
+    body: JSON.stringify(meals)
   })
   if (!res.ok) throw new Error('Generation failed')
   return res.json()
@@ -148,15 +166,17 @@ export async function* streamAIAdvice(query, mealType, onSources) {
 
     for (const part of parts) {
       if (!part.startsWith('data: ')) continue
-      const text = part.slice(6).trim()
+      const raw = part.slice(6)
+      const trimmed = raw.trim()
 
-      if (text === '[DONE]') return
+      if (trimmed === '[DONE]') return
 
-      if (text.startsWith('__SOURCES__:')) {
-        const sources = JSON.parse(text.slice(12))
+      if (trimmed.startsWith('__SOURCES__:')) {
+        const sources = JSON.parse(trimmed.slice(12))
         if (onSources) onSources(sources)
       } else {
-        yield text.replace(/__NL__/g, '\n')
+        // use raw here so leading spaces between word tokens are preserved
+        yield raw.replace(/__NL__/g, '\n')
       }
     }
   }

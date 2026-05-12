@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { FaRedo, FaCheck, FaTimes } from 'react-icons/fa'
-import { getDailyPlan, regenerateSuggestions, finalizeMeal, removeFinalized } from '../../api.js'
+import { FaCheck, FaTimes } from 'react-icons/fa'
+import { getDailyPlan, finalizeMeal, removeFinalized } from '../../api.js'
 import './DailyPlan.css'
 
 const TYPES = ['breakfast', 'lunch', 'dinner']
@@ -17,11 +17,6 @@ export default function DailyPlan() {
       .catch(() => setError('Could not load plan. Is the server running?'))
       .finally(() => setLoading(false))
   }, [])
-
-  async function handleRegenerate() {
-    const updated = await regenerateSuggestions()
-    setPlan(updated)
-  }
 
   async function handleSelect(meal) {
     const updated = await finalizeMeal(activeTab, { _id: meal._id, name: meal.name, desc: meal.desc })
@@ -50,9 +45,6 @@ export default function DailyPlan() {
           <h1>Daily Plan</h1>
           <p>{today}</p>
         </div>
-        <button className="regen-btn" onClick={handleRegenerate} title="Shuffle suggestions">
-          <FaRedo /> Reshuffle
-        </button>
       </div>
 
       {/* today's chosen meals */}

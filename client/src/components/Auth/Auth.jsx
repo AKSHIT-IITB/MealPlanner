@@ -16,6 +16,12 @@ export default function Auth() {
   const { login, isAuth } = useAuth()
   const navigate = useNavigate()
 
+  // sync tab with URL param so navbar Login/Sign Up buttons work
+  useEffect(() => {
+    setTab(searchParams.get('tab') === 'register' ? 'register' : 'login')
+    setError('')
+  }, [searchParams])
+
   // if already logged in, go to meals
   useEffect(() => {
     if (isAuth) navigate('/meals')

@@ -153,14 +153,92 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   text-align: center;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   line-height: 1.3;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s;
+}
+
+.wp-meal-cell:hover {
+  background: #f8f9fa;
+}
+
+.wp-meal-cell.open {
+  outline: 2px solid #3498db;
+  background: #eaf4fd;
 }
 
 .wp-meal-cell.breakfast { border-top: 3px solid #f39c12; }
 .wp-meal-cell.lunch     { border-top: 3px solid #27ae60; }
 .wp-meal-cell.dinner    { border-top: 3px solid #8e44ad; }
+
+.meal-name {
+  font-size: 0.82rem;
+}
+
+.swap-icon {
+  font-size: 0.65rem;
+  color: #bdc3c7;
+  margin-top: 4px;
+}
+
+.wp-meal-cell:hover .swap-icon {
+  color: #3498db;
+}
+
+.swap-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 200;
+  background: white;
+  border: 1px solid #dde;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  min-width: 160px;
+  padding: 8px;
+  text-align: left;
+}
+
+.swap-hint {
+  font-size: 0.72rem;
+  color: #7f8c8d;
+  font-weight: 600;
+  margin: 0 0 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.swap-empty {
+  font-size: 0.78rem;
+  color: #aaa;
+  margin: 4px 0 0;
+}
+
+.swap-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 8px;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.swap-option:hover {
+  background: #ecf0f1;
+}
+
+.swap-option.current {
+  font-weight: 700;
+  color: #3498db;
+}
 
 /* Empty state */
 .wp-empty {
@@ -172,18 +250,15 @@
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
+.wp-empty-icon {
+  font-size: 3rem;
+  color: #bdc3c7;
+  margin-bottom: 16px;
+}
+
 .wp-empty p {
   margin-bottom: 20px;
   font-size: 1.1rem;
-}
-
-/* Footer note */
-.wp-note {
-  margin-top: 20px;
-  font-size: 0.8rem;
-  color: #95a5a6;
-  text-align: center;
-  line-height: 1.5;
 }
 
 @media (max-width: 768px) {

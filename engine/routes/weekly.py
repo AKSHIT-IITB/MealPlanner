@@ -1,20 +1,25 @@
 from fastapi import APIRouter, HTTPException
-from weekly.planner import get_or_generate_plan, generate_plan
+from pydantic import BaseModel
+from typing import List
+from weekly.planner import generate_plan
 
 router = APIRouter()
 
 
-@router.get("/weekly-plan")
-async def get_plan():
-    try:
-        return await get_or_generate_plan()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+class MealItem(BaseModel):
+    name: str
+    desc: str = ""
+
+
+class MealsData(BaseModel):
+    breakfast: List[MealItem] = []
+    lunch: List[MealItem] = []
+    dinner: List[MealItem] = []
 
 
 @router.post("/weekly-plan/generate")
-async def regenerate_plan():
+async def do_generate(meals: MealsData):
     try:
-        return await generate_plan()
+        return generate_plan(meals.model_dump())
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
