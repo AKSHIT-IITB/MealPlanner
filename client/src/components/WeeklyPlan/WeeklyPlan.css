@@ -1,0 +1,197 @@
+.wp-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.wp-loading {
+  text-align: center;
+  padding: 80px 20px;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+/* Header */
+.wp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.wp-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #2c3e50;
+  margin: 0 0 4px;
+}
+
+.wp-subtitle {
+  color: #7f8c8d;
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+}
+
+.wp-week {
+  color: #3498db;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.generate-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #ff7043;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.generate-btn:hover:not(:disabled) {
+  background: #f4511e;
+}
+
+.generate-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.spinning {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.wp-error {
+  color: #e74c3c;
+  background: #fdf2f2;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* 7-day grid: 1 label column + 7 day columns, 4 rows (header + 3 meal types) */
+.wp-grid {
+  display: grid;
+  grid-template-columns: 110px repeat(7, 1fr);
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.wp-cell {
+  padding: 12px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  min-width: 90px;
+}
+
+/* Top-left corner */
+.wp-corner {
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: #bdc3c7;
+}
+
+/* Day headers */
+.wp-day-header {
+  background: #2c3e50;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border-radius: 8px;
+}
+
+.day-label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.day-date {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* Meal type labels */
+.wp-type-header {
+  background: #ecf0f1;
+  color: #555;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+}
+
+/* Meal cells */
+.wp-meal-cell {
+  background: white;
+  color: #333;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.3;
+}
+
+.wp-meal-cell.breakfast { border-top: 3px solid #f39c12; }
+.wp-meal-cell.lunch     { border-top: 3px solid #27ae60; }
+.wp-meal-cell.dinner    { border-top: 3px solid #8e44ad; }
+
+/* Empty state */
+.wp-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.wp-empty p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+/* Footer note */
+.wp-note {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: #95a5a6;
+  text-align: center;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .wp-grid {
+    grid-template-columns: 80px repeat(7, minmax(80px, 1fr));
+  }
+  .wp-cell {
+    font-size: 0.75rem;
+    padding: 10px 6px;
+  }
+}

@@ -1,202 +1,176 @@
 # Meal Planner Buddy
 
-A full-stack meal planning web app that lets you plan your daily meals, manage a personal recipe database, and get smart daily suggestions — with favorites always shown first.
-
-Built with **React + Vite** on the frontend and **Express + MongoDB Atlas** on the backend.
-
----
+A full-stack meal planning app with AI features. Users can sign up, manage their personal meal library, get daily suggestions, ask an AI advisor for meal recommendations, and generate a 7-day meal plan using Llama AI.
 
 ## Features
 
-- **Daily Suggestions** — Get 3 curated meal suggestions per slot (breakfast / lunch / dinner) every day. Reshuffle anytime.
-- **Favorites First** — Mark meals as favorites and they'll always surface at the top of suggestions.
-- **Lock In Your Plan** — Select and save your final meals for the day. Changes persist in MongoDB.
-- **Meal Database** — Add or remove meals from your personal database per meal type.
-- **Search** — Filter your entire meal database by name or description.
-- **Persistent Storage** — All data lives in MongoDB Atlas; nothing is lost on page refresh.
-
----
+- **Auth** — Register and login with JWT. Each user gets their own meal library.
+- **My Meals** — Add, delete, and mark favorite meals across breakfast, lunch and dinner
+- **Daily Plan** — Get 3 suggestions per meal type each day (favorites first). Pick and lock in your meals.
+- **AI Meal Advisor** — Ask anything about your meals. Uses RAG (ChromaDB + Llama) to search your library and respond.
+- **Weekly Plan** — Generate a full 7-day meal plan using Llama AI based on your meals.
 
 ## Tech Stack
 
-| Layer | Technology |
+| Layer | Tech |
 |---|---|
-| Frontend | React 18, Vite, React Router v7, React Icons |
-| Backend | Node.js, Express.js |
-| Database | MongoDB Atlas (Mongoose ODM) |
-
----
+| Frontend | React 18, Vite, React Router v7 |
+| Backend | Node.js, Express, Mongoose, MongoDB Atlas |
+| AI Service | Python, FastAPI, ChromaDB, Groq (Llama 3.1) |
+| Auth | JWT + bcryptjs |
+| Vector Store | ChromaDB (local, sentence-transformer embeddings) |
 
 ## Project Structure
 
 ```
 MealPlanner/
-├── backend/                  # Express + Mongoose API server
+├── client/              # React + Vite frontend
+│   └── src/
+│       ├── api.js
+│       ├── context/AuthContext.jsx
+│       └── components/
+│           ├── Auth/         # Login + Signup
+│           ├── Landing/      # Public home page
+│           ├── Home/         # My Meals (protected)
+│           ├── DailyPlan/    # Daily suggestions (protected)
+│           ├── AIMealAdvisor/ # AI chat (protected)
+│           ├── WeeklyPlan/   # 7-day plan (protected)
+│           └── Navbar/
+│
+├── server/              # Node.js + Express API
 │   ├── models/
-│   │   ├── Meal.js           # Meal schema (type, name, desc, isFavorite)
-│   │   └── DailyPlan.js      # Daily plan schema (date, suggestions, finalized)
+│   │   ├── User.js
+│   │   ├── Meal.js
+│   │   └── DailyPlan.js
 │   ├── routes/
-│   │   ├── meals.js          # CRUD + favorite toggle for meals
-│   │   └── dailyPlan.js      # Daily plan get / finalize / regenerate
-│   ├── db.js                 # MongoDB connection
-│   ├── index.js              # Server entry point
-│   ├── .env                  # Environment variables (not committed)
-│   ├── .env.example          # Template for .env
-│   └── package.json
+│   │   ├── auth.js
+│   │   ├── meals.js
+│   │   └── dailyPlan.js
+│   ├── middleware/auth.js
+│   └── index.js
 │
-├── frontend/                 # Vite + React client
-│   ├── public/
-│   │   └── favicon.ico
-│   ├── src/
-│   │   ├── api.js            # All fetch calls to the backend
-│   │   ├── main.jsx          # React entry point
-│   │   ├── App.jsx           # Router setup
-│   │   ├── App.css
-│   │   ├── index.css
-│   │   └── components/
-│   │       ├── Navbar/
-│   │       ├── Footer/
-│   │       ├── Home/
-│   │       └── DailyPlan/
-│   ├── index.html
-│   ├── vite.config.js        # Dev proxy: /api → localhost:5000
-│   └── package.json
-│
-├── .gitignore
-└── README.md
+└── engine/              # Python FastAPI AI service
+    ├── rag/
+    │   ├── vectorstore.py   # ChromaDB sync + semantic search
+    │   └── advisor.py       # RAG pipeline + Groq streaming
+    ├── weekly/
+    │   └── planner.py       # Weekly plan generation
+    ├── routes/
+    │   ├── advisor.py
+    │   └── weekly.py
+    ├── main.py
+    ├── config.py
+    └── requirements.txt
 ```
-
----
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) v18 or higher
-- A [MongoDB Atlas](https://www.mongodb.com/atlas) account (free tier works)
+- Node.js v18+
+- Python 3.10+
+- [MongoDB Atlas](https://www.mongodb.com/atlas) account (free tier works)
+- [Groq API key](https://console.groq.com) (free)
 
-### 1. Clone the repository
+### 1. Clone
 
 ```bash
-git clone https://github.com/<your-username>/MealPlanner.git
+git clone https://github.com/AKSHIT-IITB/MealPlanner.git
 cd MealPlanner
 ```
 
-### 2. Set up the backend
+### 2. Backend (server/)
 
 ```bash
-cd backend
+cd server
 npm install
-cp .env.example .env
 ```
 
-Edit `backend/.env` and add your MongoDB Atlas connection string:
+Create a `.env` file:
 
 ```env
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/mealplanner?retryWrites=true&w=majority&appName=Cluster0
+MONGODB_URI=mongodb+srv://<user>:<pass>@cluster0.xxxxx.mongodb.net/mealplanner
 PORT=5000
+JWT_SECRET=your_secret_key_here
 ```
 
-Start the backend server:
-
 ```bash
-npm run dev       # development (nodemon)
-# or
-npm start         # production
+npm run dev
 ```
 
-The backend runs on **http://localhost:5000**.
-
-On first run, the database is automatically seeded with 15 default meals (5 per slot).
-
-### 3. Set up the frontend
+### 3. AI Service (engine/)
 
 ```bash
-cd frontend
+cd engine
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Create a `.env` file:
+
+```env
+GROQ_API_KEY=gsk_...
+EXPRESS_API_URL=http://localhost:5000/api
+CHROMA_PATH=./chroma_db
+```
+
+```bash
+uvicorn main:app --reload --port 8000
+```
+
+> First run downloads the embedding model (~90MB, one time only).
+
+### 4. Frontend (client/)
+
+```bash
+cd client
 npm install
 npm run dev
 ```
 
-The frontend runs on **http://localhost:5173** and automatically proxies `/api/*` requests to the backend.
+App runs at `http://localhost:5173`
 
----
+## How the AI Advisor works
 
-## API Reference
+1. User clicks **Sync Meals** — fetches all meals from the database and stores them as vector embeddings in ChromaDB
+2. User types a question like *"something high protein for lunch"*
+3. The query is embedded and matched against stored meals using cosine similarity
+4. Top 5 matching meals are passed as context to Llama 3.1
+5. Llama responds with a recommendation based only on those meals
+6. Response streams back to the browser in real time via SSE
 
-### Meals
+## API Routes
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/meals` | Get all meals grouped by type |
-| `POST` | `/api/meals` | Add a new meal |
-| `DELETE` | `/api/meals/:id` | Delete a meal by ID |
-| `PATCH` | `/api/meals/:id/favorite` | Toggle favorite status |
+### Auth
+| Method | Route | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Register, returns JWT |
+| POST | `/api/auth/login` | Login, returns JWT |
 
-**POST `/api/meals` body:**
-```json
-{
-  "type": "breakfast",
-  "name": "Oatmeal",
-  "desc": "Healthy oats with fruits and nuts"
-}
-```
+### Meals (requires auth)
+| Method | Route | Description |
+|---|---|---|
+| GET | `/api/meals` | Get user's meals grouped by type |
+| POST | `/api/meals` | Add a meal |
+| DELETE | `/api/meals/:id` | Delete a meal |
+| PATCH | `/api/meals/:id/favorite` | Toggle favorite |
 
-### Daily Plan
+### Daily Plan (requires auth)
+| Method | Route | Description |
+|---|---|---|
+| GET | `/api/daily-plan` | Get today's plan |
+| POST | `/api/daily-plan/regenerate` | Reshuffle suggestions |
+| PUT | `/api/daily-plan/finalize` | Pick a meal for a slot |
+| DELETE | `/api/daily-plan/finalize/:type` | Clear a slot |
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/daily-plan` | Get today's plan (auto-created if new day) |
-| `POST` | `/api/daily-plan/regenerate` | Reshuffle today's suggestions |
-| `PUT` | `/api/daily-plan/finalize` | Select a meal for a slot |
-| `DELETE` | `/api/daily-plan/finalize/:type` | Clear a finalized meal slot |
-
-**PUT `/api/daily-plan/finalize` body:**
-```json
-{
-  "type": "lunch",
-  "meal": { "_id": "...", "name": "Burger", "desc": "..." }
-}
-```
-
----
-
-## Environment Variables
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `MONGODB_URI` | MongoDB Atlas connection string | `mongodb+srv://...` |
-| `PORT` | Port the backend listens on | `5000` |
-
----
-
-## Scripts
-
-### Backend (`backend/`)
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start with nodemon (auto-restart on changes) |
-| `npm start` | Start in production mode |
-
-### Frontend (`frontend/`)
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start Vite dev server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build locally |
-
----
-
-## Deployment
-
-### Backend
-Deploy to any Node.js host (Railway, Render, Fly.io). Set the `MONGODB_URI` and `PORT` environment variables on the platform.
-
-### Frontend
-Build with `npm run build` inside `frontend/`, then deploy the `dist/` folder to Vercel, Netlify, or any static host. Set the API base URL to your deployed backend URL.
-
----
+### AI Engine
+| Method | Route | Description |
+|---|---|---|
+| POST | `/ai-api/ask` | Stream AI recommendation (SSE) |
+| POST | `/ai-api/sync` | Sync meals to ChromaDB |
+| GET | `/ai-api/weekly-plan` | Get weekly plan |
+| POST | `/ai-api/weekly-plan/generate` | Generate new weekly plan |
 
 ## Author
 
@@ -205,6 +179,3 @@ Build with `npm run build` inside `frontend/`, then deploy the `dist/` folder to
 - [LinkedIn](https://www.linkedin.com/in/akshit-kumar-7069392b9)
 - [YouTube](https://www.youtube.com/@MedTechDiaries8)
 - [X / Twitter](https://x.com/Akshit_iitb_27)
-
----
-
